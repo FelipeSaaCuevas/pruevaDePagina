@@ -1,70 +1,180 @@
-<?php 
-include("db.php"); ?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
-    <title>Ficha Médica</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ficha Técnica</title>
     <style>
-        body { font-family: Arial; margin: 20px; }
-        form { width: 400px; margin: auto; }
-        label { display: block; margin-top: 10px; }
-        input, textarea, select { width: 100%; padding: 5px; }
-        .btn { margin-top: 15px; padding: 10px; width: 120px; }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2,
+        h3 {
+            color: #333;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="date"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="date"]:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #5cb85c;
+            outline: none;
+        }
+
+        .btn-group {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .btn-guardar {
+            background-color: #5cb85c;
+        }
+
+        .btn-limpiar {
+            background-color: #f0ad4e;
+        }
+
+        .btn-cerrar {
+            background-color: #d9534f;
+        }
+
+        .search-form {
+            text-align: center;
+            margin-top: 20px;
+        }
     </style>
 </head>
+
 <body>
-    <h2>Ficha Médica</h2>
 
-    <!-- Formulario de ingreso -->
-    <form method="POST" action="guardar.php">
-        <label>RUT:</label>
-        <input type="text" name="rut" required>
+    <div class="container">
+        <h2>Ficha Técnica del Paciente</h2>
 
-        <label>Nombres:</label>
-        <input type="text" name="nombres" required>
+        <form id="fichaTecnicaForm" method="POST" action="guardar_datos.php">
+            <div class="form-group">
+                <label for="rut">RUT Chileno:</label>
+                <input type="text" id="rut" name="rut" placeholder="Ej: 12345678-9" pattern="\d{7,8}-[\dkK]"
+                    title="Ingrese un RUT válido con dígito verificador." required>
+            </div>
 
-        <label>Apellidos:</label>
-        <input type="text" name="apellidos" required>
+            <div class="form-group">
+                <label for="nombres">Nombres:</label>
+                <input type="text" id="nombres" name="nombres" maxlength="30" required>
+            </div>
 
-        <label>Dirección:</label>
-        <input type="text" name="direccion">
+            <div class="form-group">
+                <label for="apellidos">Apellidos:</label>
+                <input type="text" id="apellidos" name="apellidos" maxlength="35" required>
+            </div>
 
-        <label>Ciudad:</label>
-        <input type="text" name="ciudad">
+            <div class="form-group">
+                <label for="direccion">Dirección:</label>
+                <input type="text" id="direccion" name="direccion" maxlength="40">
+            </div>
 
-        <label>Teléfono:</label>
-        <input type="text" name="telefono">
+            <div class="form-group">
+                <label for="ciudad">Ciudad:</label>
+                <input type="text" id="ciudad" name="ciudad" maxlength="20">
+            </div>
 
-        <label>Email:</label>
-        <input type="email" name="email">
+            <div class="form-group">
+                <label for="telefono">Teléfono:</label>
+                <input type="text" id="telefono" name="telefono" pattern="\+56\d{9}" placeholder="+56912345678"
+                    title="Formato: +56 seguido de 9 dígitos." required>
+            </div>
 
-        <label>Fecha de Nacimiento:</label>
-        <input type="date" name="fecha_nacimiento">
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
 
-        <label>Estado Civil:</label>
-        <select name="estado_civil">
-            <option value="Soltero">Soltero</option>
-            <option value="Casado">Casado</option>
-            <option value="Divorciado">Divorciado</option>
-            <option value="Viudo">Viudo</option>
-        </select>
+            <div class="form-group">
+                <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
+                <input type="date" id="fecha_nacimiento" name="fecha_nacimiento" max="<?php echo date('Y-m-d'); ?>"
+                    required>
+            </div>
 
-        <label>Comentarios:</label>
-        <textarea name="comentarios"></textarea>
+            <div class="form-group">
+                <label for="estado_civil">Estado Civil:</label>
+                <select id="estado_civil" name="estado_civil">
+                    <option value="soltero">Soltero(a)</option>
+                    <option value="casado">Casado(a)</option>
+                    <option value="divorciado">Divorciado(a)</option>
+                    <option value="viudo">Viudo(a)</option>
+                    <option value="separado">Separado(a)</option>
+                </select>
+            </div>
 
-        <input class="btn" type="submit" value="Guardar">
-        <input class="btn" type="reset" value="Limpiar">
-        <button class="btn" type="button" onclick="window.close();">Cerrar</button>
-    </form>
+            <div class="form-group">
+                <label for="comentarios">Comentarios:</label>
+                <textarea id="comentarios" name="comentarios" rows="4"></textarea>
+            </div>
 
-    <hr>
+            <div class="btn-group">
+                <button type="submit" class="btn btn-guardar">Guardar</button>
+                <button type="reset" class="btn btn-limpiar">Limpiar Datos</button>
+                <button type="button" class="btn btn-cerrar" onclick="window.close()">Cerrar</button>
+            </div>
+        </form>
 
-    <!-- Buscar por apellido -->
-    <h3>Buscar Paciente por Apellido</h3>
-    <form method="GET" action="buscar.html">
-        <input type="text" name="apellido" required>
-        <input class="btn" type="submit" value="Buscar">
-    </form>
+        <hr>
+
+        <h3>Buscar Paciente por Apellido</h3>
+        <div class="search-form">
+            <form method="GET" action="buscar_paciente.php">
+                <input type="text" name="apellido" placeholder="Ingrese apellido..." required>
+                <button type="submit" class="btn btn-guardar">Buscar</button>
+            </form>
+        </div>
+    </div>
+
 </body>
+
 </html>
