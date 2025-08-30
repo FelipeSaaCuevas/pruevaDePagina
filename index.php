@@ -1,0 +1,70 @@
+<?php 
+include("db.php"); ?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ficha Médica</title>
+    <style>
+        body { font-family: Arial; margin: 20px; }
+        form { width: 400px; margin: auto; }
+        label { display: block; margin-top: 10px; }
+        input, textarea, select { width: 100%; padding: 5px; }
+        .btn { margin-top: 15px; padding: 10px; width: 120px; }
+    </style>
+</head>
+<body>
+    <h2>Ficha Médica</h2>
+
+    <!-- Formulario de ingreso -->
+    <form method="POST" action="guardar.php">
+        <label>RUT:</label>
+        <input type="text" name="rut" required>
+
+        <label>Nombres:</label>
+        <input type="text" name="nombres" required>
+
+        <label>Apellidos:</label>
+        <input type="text" name="apellidos" required>
+
+        <label>Dirección:</label>
+        <input type="text" name="direccion">
+
+        <label>Ciudad:</label>
+        <input type="text" name="ciudad">
+
+        <label>Teléfono:</label>
+        <input type="text" name="telefono">
+
+        <label>Email:</label>
+        <input type="email" name="email">
+
+        <label>Fecha de Nacimiento:</label>
+        <input type="date" name="fecha_nacimiento">
+
+        <label>Estado Civil:</label>
+        <select name="estado_civil">
+            <option value="Soltero">Soltero</option>
+            <option value="Casado">Casado</option>
+            <option value="Divorciado">Divorciado</option>
+            <option value="Viudo">Viudo</option>
+        </select>
+
+        <label>Comentarios:</label>
+        <textarea name="comentarios"></textarea>
+
+        <input class="btn" type="submit" value="Guardar">
+        <input class="btn" type="reset" value="Limpiar">
+        <button class="btn" type="button" onclick="window.close();">Cerrar</button>
+    </form>
+
+    <hr>
+
+    <!-- Buscar por apellido -->
+    <h3>Buscar Paciente por Apellido</h3>
+    <form method="GET" action="buscar.php">
+        <input type="text" name="apellido" required>
+        <input class="btn" type="submit" value="Buscar">
+    </form>
+</body>
+</html>

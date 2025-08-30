@@ -1,0 +1,59 @@
+<?php
+include("db.php");
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $rut = $_POST['rut'];
+    $nombres = $_POST['nombres'];
+    $apellidos = $_POST['apellidos'];
+    $direccion = $_POST['direccion'];
+    $ciudad = $_POST['ciudad'];
+    $telefono = $_POST['telefono'];
+    $email = $_POST['email'];
+    $fecha_nacimiento = $_POST['fecha_nacimiento'];
+    $estado_civil = $_POST['estado_civil'];
+    $comentarios = $_POST['comentarios'];
+
+    // Verificar si ya existe
+    $check = $conn->prepare("SELECT * FROM paciente WHERE rut = ?");
+    $check->bind_param("s", $rut);
+    $check->execute();
+    $result = $check->get_result();
+
+    if ($result->num_rows > 0) {
+        // Preguntar si desea sobrescribir
+        echo "<script>
+                if(confirm('El paciente con este RUT ya existe. ¿Desea sobrescribirlo?')) {
+                    window.location.href = 'guardar.php?overwrite=1&rut=$rut&nombres=".urlencode($nombres)."&apellidos=".urlencode($apellidos)."&direccion=".urlencode($direccion)."&ciudad=".urlencode($ciudad)."&telefono=".urlencode($telefono)."&email=".urlencode($email)."&fecha_nacimiento=$fecha_nacimiento&estado_civil=$estado_civil&comentarios=".urlencode($comentarios)."';
+                } else {
+                    window.location.href = 'index.php';
+                }
+              </script>";
+        exit;
+    } else {
+        $stmt = $conn->prepare("INSERT INTO paciente VALUES (?,?,?,?,?,?,?,?,?,?)");
+        $stmt->bind_param("ssssssssss", $rut, $nombres, $apellidos, $direccion, $ciudad, $telefono, $email, $fecha_nacimiento, $estado_civil, $comentarios);
+        $stmt->execute();
+        echo "<script>alert('Paciente guardado con éxito'); window.location.href='index.php';</script>";
+    }
+}
+
+// Si viene de confirmación overwrite
+if (isset($_GET['overwrite'])) {
+    $rut = $_GET['rut'];
+    $nombres = urldecode($_GET['nombres']);
+    $apellidos = urldecode($_GET['apellidos']);
+    $direccion = urldecode($_GET['direccion']);
+    $ciudad = urldecode($_GET['ciudad']);
+    $telefono = urldecode($_GET['telefono']);
+    $email = urldecode($_GET['email']);
+    $fecha_nacimiento = $_GET['fecha_nacimiento'];
+    $estado_civil = $_GET['estado_civil'];
+    $comentarios = urldecode($_GET['comentarios']);
+
+    $stmt = $conn->prepare("UPDATE paciente SET nombres=?, apellidos=?, direccion=?, ciudad=?, telefono=?, email=?, fecha_nacimiento=?, estado_civil=?, comentarios=? WHERE rut=?");
+    $stmt->bind_param("ssssssssss", $nombres, $apellidos, $direccion, $ciudad, $telefono, $email, $fecha_nacimiento, $estado_civil, $comentarios, $rut);
+    $stmt->execute();
+
+    echo "<script>alert('Registro actualizado correctamente'); window.location.href='index.php';</script>";
+}
+?>
